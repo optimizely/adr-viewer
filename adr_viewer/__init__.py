@@ -52,7 +52,7 @@ def parse_adr_to_config(path):
                 'status': status,
                 'body': str(soup),
                 'title': header.text,
-                'ref': os.path.basename(path),
+                'ref': normalize_adr_ref(os.path.basename(path)),
             }
     else:
         return None
@@ -64,7 +64,14 @@ def rewrite_relative_link_to_anchor(link):
         host = urlparse.urlparse(href).netloc
         if not host:
             # relative path
-            link.attrs['href'] = '#' + link.attrs['href']
+            link.attrs['href'] = '#' + normalize_adr_ref(link.attrs['href'])
+
+
+def normalize_adr_ref(ref):
+    """
+    Transform a filename for use as an ID. Principally, remove "." since it interferes with jQuery
+    """
+    return os.path.splitext(ref)[0]
 
 
 def render_html(config):
