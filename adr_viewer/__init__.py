@@ -1,10 +1,12 @@
 import glob
-import mistune
 import os
-from bs4 import BeautifulSoup
-from jinja2 import Environment, PackageLoader, select_autoescape
-import click
+import urlparse
+
 from bottle import Bottle, run
+from bs4 import BeautifulSoup
+import click
+from jinja2 import Environment, PackageLoader, select_autoescape
+import mistune
 
 
 def extract_statuses_from_adr(page_object):
@@ -43,13 +45,34 @@ def parse_adr_to_config(path):
     header = soup.find('h1')
 
     if header:
+          for link in soup.find_all('a'):
+              rewrite_relative_link_to_anchor(link)
+
           return {
                 'status': status,
-                'body': adr_as_html,
-                'title': header.text
+                'body': str(soup),
+                'title': header.text,
+                'ref': normalize_adr_ref(os.path.basename(path)),
             }
     else:
         return None
+
+
+def rewrite_relative_link_to_anchor(link):
+    href = link.attrs.get('href')
+    if href:
+        host = urlparse.urlparse(href).netloc
+        if not host:
+            # relative path
+            link.attrs['href'] = '#' + normalize_adr_ref(link.attrs['href'])
+
+
+def normalize_adr_ref(ref):
+    """
+    Transform a filename for use as an ID. Principally, remove "." since it interferes with jQuery
+    """
+    return os.path.splitext(ref)[0]
+
 
 def render_html(config):
 
