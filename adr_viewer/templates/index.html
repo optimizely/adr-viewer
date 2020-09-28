@@ -52,6 +52,10 @@
                 background-color: lightblue;
             }
 
+            .panel-heading.adr-rejected {
+                background-color: pink;
+            }
+
             .adr-superceded > .panel-title > a {
                 text-decoration: line-through;
             }
@@ -73,15 +77,17 @@
                         <a data-toggle="collapse" data-target="#collapse{{ adr_record.index }}" href="#{{ adr_record.ref }}">{{ adr_record.title }}</a>
 
                         {% if adr_record.status == "accepted" %}
-                        <i class="adr-icon fas fa-fw fa-check"></i>
+                        <i class="adr-icon fas fa-fw fa-check" title="Accepted"></i>
                         {% elif adr_record.status == "superceded" %}
-                        <i class="adr-icon fas fa-fw fa-times"></i>
+                        <i class="adr-icon fas fa-fw fa-times" title="Superseded"></i>
                         {% elif adr_record.status == "amended" %}
-                        <i class="adr-icon fas fa-fw fa-arrow-down"></i>
+                        <i class="adr-icon fas fa-fw fa-arrow-down" title="Amended"></i>
                         {% elif adr_record.status == "pending" %}
-                        <i class="adr-icon fas fa-fw fa-hourglass-half"></i>
+                        <i class="adr-icon fas fa-fw fa-hourglass-half" title="Pending"></i>
+                        {% elif adr_record.status == "rejected" %}
+                        <i class="adr-icon fas fa-fw fa-times" title="Rejected"></i>
                         {% else %}
-                        <i class="adr-icon fas fa-fw fa-question"></i>
+                        <i class="adr-icon fas fa-fw fa-question" title="Unknown"></i>
                         {% endif %}
 
                     </h4>

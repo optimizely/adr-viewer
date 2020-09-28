@@ -39,6 +39,8 @@ def parse_adr_to_config(path):
         status = 'superceded'
     elif any([line.startswith("Pending") for line in status]):
         status = 'pending'
+    elif any([line.startswith("Rejected") for line in status]):
+        status = 'rejected'
     else:
         status = 'unknown'
 
